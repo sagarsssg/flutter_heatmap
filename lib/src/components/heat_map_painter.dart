@@ -10,17 +10,14 @@ class HeatMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final layerCount = heatMapProcessor.largestCluster > 10
-        ? heatMapProcessor.largestCluster
-        : 10;
-    double calcFraction(int i) => i > 1 ? (i - 1) / layerCount : 0;
-    double calcBlur(double val) => (4 * val * val + 2) * clusterScale / 8;
-    for (int i = 1; i < layerCount; i++) {
+    const layerCount = 5;
+    double calcFraction(int i) => i / layerCount;
+    double calcBlur(double val) => 8 - (val * 7.5);
+    for (int i = 0; i <= layerCount; i++) {
       final fraction = calcFraction(i);
       final paint = Paint()
         ..color = _getSpectrumColor(fraction, alpha: opacity);
-      paint.maskFilter =
-          MaskFilter.blur(BlurStyle.normal, calcBlur(1 - fraction));
+      paint.maskFilter = MaskFilter.blur(BlurStyle.normal, calcBlur(fraction));
 
       canvas.drawPath(heatMapProcessor.getPathLayer(fraction), paint);
     }
