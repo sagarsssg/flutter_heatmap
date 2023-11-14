@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -35,8 +36,10 @@ class HeatMapProcessor {
     for (final e in _dbScan.cluster) {
       largestCluster = math.max(largestCluster, e.length);
     }
-    if (largestCluster < 3) {
-      largestCluster = 3;
+    if (Platform.isAndroid) {
+      if (largestCluster < 3) {
+        largestCluster = 3;
+      }
     }
   }
 
