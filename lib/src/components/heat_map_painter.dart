@@ -18,8 +18,10 @@ class HeatMapPainter extends CustomPainter {
       final paint = Paint()
         ..color = _getSpectrumColor(fraction, alpha: opacity);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, calcBlur(fraction));
-
-      canvas.drawPath(heatMapProcessor.getPathLayer(fraction), paint);
+      final path = heatMapProcessor.getPathLayer(fraction);
+      if (path != null) {
+        canvas.drawPath(path, paint);
+      }
     }
   }
 

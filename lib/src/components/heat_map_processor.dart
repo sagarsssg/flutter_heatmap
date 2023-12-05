@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -36,18 +35,19 @@ class HeatMapProcessor {
     for (final e in _dbScan.cluster) {
       largestCluster = math.max(largestCluster, e.length);
     }
-    if (Platform.isAndroid) {
-      if (largestCluster < 3) {
-        largestCluster = 3;
-      }
+
+    if (largestCluster < 3) {
+      largestCluster = 3;
     }
   }
 
   /// Creates a path for the given [layer] using a [scaleFunc]
-  Path getPathLayer(double layer) {
+  Path? getPathLayer(double layer) {
     var joinedPath = Path();
     final paths = _paths.where((p) => p.clusterSize / largestCluster >= layer);
-
+    if (paths.isEmpty) {
+      return null;
+    }
     for (var cluster in paths) {
       var scaleInput = cluster.clusterSize - (layer * largestCluster);
       var transform = Matrix4.identity()
